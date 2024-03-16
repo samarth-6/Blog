@@ -9,7 +9,7 @@ const Header = () => {
   return (
     <Navbar className='border-b-2'>
          <Link to="/" className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>{/*text-small is set at default and for small above screens  text size is set large */}
-            <span className='px-2 py-1 bg-blue-500 rounded-lg text-white'>
+            <span className='px-2 py-1 bg-cyan-500 rounded-lg text-white'>
                 Your
             </span>
             Blog
