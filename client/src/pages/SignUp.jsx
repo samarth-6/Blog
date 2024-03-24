@@ -2,6 +2,7 @@ import { Alert, Button, Label, Spinner, TextInput } from 'flowbite-react';
 import React from 'react'
 import {Link,useNavigate} from 'react-router-dom';
 import {useState} from 'react';
+import OAuth from '../components/OAuth';
 
 const SignUp = () => {
   const [formData,setFormData]=useState({});
@@ -72,7 +73,7 @@ const SignUp = () => {
       <TextInput type='password' placeholder='Password' id='password'  onChange={handleChange}/>
 
       </div>
-      <div className="flex justify-center mt-5">
+      <div className="flex justify-center mt-5 flex-col gap-5">
       <Button outline gradientDuoTone="cyanToBlue" type='submit' disabled={loading}>
        {loading ? (
         <>
@@ -81,6 +82,7 @@ const SignUp = () => {
         <span className='pl-3'>Loading...</span>
       </> ) :' Sign Up '}
       </Button>
+      <OAuth/>
       </div>
     </form>
     <div className="flex gap-2 justify-center text-sm mt-5">

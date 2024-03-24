@@ -4,6 +4,7 @@ import {Link,useNavigate} from 'react-router-dom';
 import {useState} from 'react';
 import {useDispatch,useSelector} from 'react-redux';
 import { signInStart,signInSuccess,signInFailure } from '../redux/user/userSlice';
+import OAuth from '../components/OAuth';
 
 const SignIn = () => {
   const [formData,setFormData]=useState({});
@@ -68,7 +69,7 @@ const SignIn = () => {
       <TextInput type='password' placeholder='********' id='password'  onChange={handleChange}/>
 
       </div>
-      <div className="flex justify-center mt-5">
+      <div className="flex justify-center mt-5 flex-col gap-5">
       <Button outline gradientDuoTone="cyanToBlue" type='submit' disabled={loading}>
        {loading ? (
         <>
@@ -77,7 +78,8 @@ const SignIn = () => {
         <span className='pl-3'>Loading...</span>
       </> ) :' Sign In '}
       </Button>
-      </div>
+     <OAuth/>
+      </div> 
     </form>
     <div className="flex gap-2 justify-center text-sm mt-5">
       <span>Do not Have An Account?</span>
