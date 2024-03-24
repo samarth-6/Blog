@@ -2,12 +2,14 @@ import { Avatar, Button, Dropdown, DropdownDivider, Navbar, TextInput } from 'fl
 import React from 'react'
 import {Link,useLocation} from 'react-router-dom';
 import {AiOutlineSearch} from 'react-icons/ai';
-import {FaMoon} from 'react-icons/fa';
-import {useSelector} from 'react-redux'
-
+import {FaMoon,FaSun} from 'react-icons/fa';
+import {useSelector,useDispatch} from 'react-redux'
+import {toggleTheme} from '../redux/theme/themeSlice';
 const Header = () => {
     const path=useLocation().pathname;
+    const dispatch=useDispatch();
     const {currentUser}=useSelector(state=>state.user)
+    const {theme}=useSelector((state)=>state.theme);
   return (
     <Navbar className='border-b-2'>
          <Link to="/" className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>{/*text-small is set at default and for small above screens  text size is set large */}
@@ -23,8 +25,8 @@ const Header = () => {
             <AiOutlineSearch/>
         </Button>
         <div className="flex gap-2 md:order-2">
-             <Button className='w-12 h-10 hidden sm:inline' color='gray'>    {/*default is hidden but in larger screen the icon is visible */}
-                <FaMoon />
+             <Button className='w-12 h-10 hidden sm:inline' color='gray' onClick={()=>dispatch(toggleTheme())}>    {/*default is hidden but in larger screen the icon is visible */}
+             {theme === 'light' ? <FaMoon /> : <FaSun/>}
             </Button>
             {currentUser?(
                 <Dropdown arrowIcon={false} inline label={<Avatar
