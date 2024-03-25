@@ -8,6 +8,7 @@ import SignUp from './pages/SignUp';
 import Header from './components/Header.jsx';
 import {BrowserRouter,Routes,Route} from 'react-router-dom'
 import FooterCom from './components/Footer.jsx';
+import PrivateRoute from './components/PrivateRoute.jsx';
 
 const App = () => {
   return (
@@ -18,7 +19,10 @@ const App = () => {
     <Route path="about" element={<About/>}/>
     <Route path="/sign-in" element={<SignIn/>}/>
     <Route path="/sign-up" element={<SignUp/>}/>
+    <Route element={<PrivateRoute/>}>
     <Route path="/dashboard" element={<Dashboard/>}/>
+    </Route>
+    
     <Route path="/projects" element={<Projects/>}/>
     </Routes>
     <FooterCom/>
