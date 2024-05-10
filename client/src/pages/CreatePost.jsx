@@ -6,12 +6,40 @@ import {getDownloadURL, getStorage,ref, uploadBytesResumable} from 'firebase/sto
 import {app} from '../firebase'
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css'
+import  {useNavigate} from 'react-router-dom'
 
 const CreatePost = () => {
   const [file,setFile]=useState(null);
   const [imageUploadProgress,setimageUploadProgress]=useState(null);
   const [imageUploadError,setImageUploadError]=useState(null);
   const [formData,setFormData]=useState({});
+  const [publishError,setPublishError]=useState(null);
+  const navigate=useNavigate()
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/post/create', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setPublishError(data.message);
+        return;
+      }
+
+      if (res.ok) {
+        setPublishError(null);
+        navigate(`/post/${data.slug}`)
+      }
+    } catch (error) {
+      setPublishError('Something went wrong');
+    }
+  };
   const handleUploadImage=async()=>{
     try {
       if(!file){
@@ -58,10 +86,12 @@ const CreatePost = () => {
       <h1 className='text-center text-3xl my-7 font-semibold'>
         Create a Post
       </h1>
-      <form className='flex flex-col gap-4'>
+      <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
         <div className="flex flex-col gap-4 sm:flex-row justify-between">
-          <TextInput type='text' placeholder='Title' required id='title' className='flex-1'/>
-          <Select>
+          <TextInput onChange={(e)=>setFormData({...formData,title:e.target.value})} type='text' placeholder='Title' required id='title' className='flex-1'/>
+          <Select
+          onChange={(e)=>setFormData({...formData,category:e.target.value})}
+          >
           <option value="uncategorized">Select a Category</option>
           <option value="cpp">C++</option>
           <option value="java">Java</option>
@@ -95,8 +125,12 @@ const CreatePost = () => {
           alt='upload'
           className='w-full h-72 object-cover'
         />)}
-        <ReactQuill theme="snow" placeholder='Write something...' className='h-72 mb-12' required/>
+        <ReactQuill onChange={(value)=>{setFormData({...formData,content:value})}} theme="snow" placeholder='Write something...' className='h-72 mb-12' required/>
         <Button type='submit' gradientDuoTone='purpleToPink'>Publish</Button>
+        {
+          publishError && <Alert className='mt-5'color='failure'>{publishError}</Alert>
+        }
+      
       </form>
     </div>
   )
