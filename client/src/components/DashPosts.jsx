@@ -9,7 +9,28 @@ const DashPosts = () => {
   const {currentUser}=useSelector((state)=>state.user)
   const [userPosts,setUserPosts]=useState([])
   const [showMore,setShowMore]=useState(true);
-  console.log(userPosts);
+  const [showModal,setShowModal]=useState(false);
+  const [postIdToDelete,setPostIdToDelete]=useState('');
+  
+  const handleDeletePost=async()=>{
+     setShowModal(false);
+     try {
+      const res=await fetch(`/api/post/deleteposts/${postIdToDelete}/${currentUser._id}`,{
+        method:'DELETE',
+
+      })
+      const data=await res.json();
+      if(!res.ok){
+        console.log(data.message);
+      } else {
+        setUserPosts((prev) =>
+          prev.filter((post) => post._id !== postIdToDelete)
+        );
+      }
+    }catch (error) {
+      console.log(error.message);
+     }
+  }
   const handleShowMore=async()=>{
     const startIndex=userPosts.length;
     try{
@@ -121,8 +142,22 @@ const DashPosts = () => {
           
           
       </>
-    ):
-    <p>No BLOGS Available</p>}
+    ):(
+    <p>No BLOGS Available</p>)}
+    <Modal show={showModal} onClose={()=>setShowModal(false)} popup 
+       size='md'>
+           <Modal.Header/>
+           <Modal.Body>
+            <div className="text-center">
+              <HiOutlineExclamationCircle className='h-14 w-14 text-gray-400 dark:text-black-200 mb-4 mx-auto'/>
+              <h3 className='mb-5 text-lg text-black-500  dark:text-gray-400'>Are You Aure You want to Delete this Post</h3>
+              <div className="flex justify-center gap-4">
+              <Button color='failure' onClick={handleDeletePost}>YES</Button>
+              <Button color='black' onClick={()=>setShowModal(false)}>NO</Button>
+              </div>
+            </div>
+           </Modal.Body>
+       </Modal>
     </div>
   )
 }
