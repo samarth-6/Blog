@@ -14,21 +14,31 @@ const Header = () => {
     const {currentUser}=useSelector(state=>state.user)
     const {theme}=useSelector((state)=>state.theme);
 
-    const handleSignOut=async()=>{
-        try{
-          const res=await fetch('api/user/signout',{
-            method:'POST',
+    const handleSignOut = async () => {
+        try {
+          const res = await fetch('/api/user/signout', { 
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json'
+            }
           });
-          const data=await res.json();
-          if(!res.ok){
-            console.log(data.message);
-          }else{
-             dispatch(signoutSuccess());
+      
+          if (res.status === 204) { 
+            dispatch(signoutSuccess());
+            return;
           }
-        }catch(error){
-         console.log(error.message);
+      
+          const data = await res.json();
+          if (!res.ok) {
+            console.log('Error:', data.message);
+          } else {
+            dispatch(signoutSuccess());
+          }
+        } catch (error) {
+          console.log('Fetch error:', error.message);
         }
-      }
+      };
+      
   return (
     <Navbar className='border-b-2'>
          <Link to="/" className='self-center whitespace-nowrap text-sm sm:text-xl font-semibold dark:text-white'>{/*text-small is set at default and for small above screens  text size is set large */}
