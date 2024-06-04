@@ -79,6 +79,15 @@ export default function DashSidebar() {
                   Comments
                 </Sidebar.Item>
               </Link>
+              <Link to='/dashboard?tab=dash'>
+                <Sidebar.Item
+                  active={tab === 'dash'}
+                  icon={HiDocumentText}
+                  as='div'
+                >
+                  Dashboard
+                </Sidebar.Item>
+              </Link>
             </>
           )}
             

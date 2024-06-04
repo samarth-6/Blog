@@ -73,7 +73,7 @@ function DashboardComp() {
           <HiOutlineUserGroup className="text-white rounded-full text-5xl p-3 shadow-lg" />
         </div>
         <div className="flex gap-2 text-sm">
-          <span className="text-green-400 flex items-center">
+          <span className="text-black-200 flex items-center">
             <HiArrowNarrowUp />
             {lastMonthUsers}
           </span>
@@ -89,7 +89,7 @@ function DashboardComp() {
           <HiAnnotation className="text-white rounded-full text-5xl p-3 shadow-lg" />
         </div>
         <div className="flex gap-2 text-sm">
-          <span className="text-green-400 flex items-center">
+          <span className="text-black-400 flex items-center">
             <HiArrowNarrowUp />
             {lastMonthComments}
           </span>
@@ -105,7 +105,7 @@ function DashboardComp() {
           <HiDocumentText className="text-white rounded-full text-5xl p-3 shadow-lg" />
         </div>
         <div className="flex gap-2 text-sm">
-          <span className="text-green-400 flex items-center">
+          <span className="text-black-200 flex items-center">
             <HiArrowNarrowUp />
             {lastMonthPosts}
           </span>
