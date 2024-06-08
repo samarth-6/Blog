@@ -7,6 +7,7 @@ import { errorHandler } from './utils/error.js'; // Import the errorHandler func
 import postRoutes from './routes/post.route.js'
 import commentRoutes from './routes/comment.route.js'
 import cookieParser from 'cookie-parser';
+import path from 'path';
 dotenv.config();
 
 const app = express();
@@ -17,6 +18,10 @@ mongoose.connect(process.env.MONGO)
     .then(() => { console.log('MongoDb is connected') })
     .catch((err) => { console.log(err) });
 
+
+
+const __dirname=path.resolve();
+
 const PORT = 3000;
 app.listen(PORT, () => {
     console.log(`Server running on PORT ${PORT}`);
@@ -26,6 +31,13 @@ app.use('/api/user', userRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/post',postRoutes)
 app.use('/api/comment',commentRoutes)
+
+app.use(express.static(path.join(__dirname,'/client/dist')))
+
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(__dirname,'/client','dist','index.html'))
+})
+
 
 // Error handling middleware
 app.use((err, req, res, next) => {
