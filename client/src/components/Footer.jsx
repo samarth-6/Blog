@@ -17,7 +17,7 @@ const FooterCom = () => {
         </Link>
          </div>
          <div className="grid grid-cols-2 gap-8 mt-4 sm:grid-cols-3 sm:gap-6">
-            <Footer.Title title='Projects'/>
+            <Footer.Title title='Follow Me'/>
             <Footer.LinkGroup col>
             <Footer.Link
                   href='https://github.com/samarth-6'
@@ -36,7 +36,7 @@ const FooterCom = () => {
             </Footer.LinkGroup>
          </div>
          <div className="grid grid-cols-2 gap-3 sm:mt-4 sm:grid-cols-3 sm:gap-6">
-            <Footer.Title title='Follow Me'/>
+            <Footer.Title title='Projects'/>
             <Footer.LinkGroup col>
             <Footer.Link
                   href='https://todo-new-ochre.vercel.app/'
