@@ -10,10 +10,9 @@ const FooterCom = () => {
         <div className="grid w-full justify-between sm:flex md:grid-cols-1">
         <div className="mt-5">
         <Link to="/" className='self-center whitespace-nowrap text-lg sm:text-lg font-semibold dark:text-white'>{/*text-small is set at default and for small above screens  text size is set large */}
-            <span className='px-2 py-1 bg-cyan-500 rounded-lg text-white'>
-                Your
-            </span>
-            Blog
+        <span className='px-2 py-1 bg-black rounded-lg text-white'>
+          My Blog
+        </span>
         </Link>
          </div>
          <div className="grid grid-cols-2 gap-8 mt-4 sm:grid-cols-3 sm:gap-6">

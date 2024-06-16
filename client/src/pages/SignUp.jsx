@@ -45,10 +45,9 @@ const SignUp = () => {
     {/* top */}
     <div className="flex-1 mb-10">
     <Link to="/" className='self-center  font-bold dark:text-white text-6xl'>{/*text-small is set at default and for small above screens  text size is set large */}
-            <span className='px-2 py-1 bg-cyan-500 rounded-lg text-white'>
-                My
-            </span>
-            Blog
+    <span className='px-2 py-1 bg-black rounded-lg text-white'>
+          My Blog
+        </span>
         </Link>
         <p className="text-sm mt-5">
          
