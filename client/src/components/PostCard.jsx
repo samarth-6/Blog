@@ -6,6 +6,7 @@ export default function PostCard({ post }) {
     <div className="group relative w-full border border-gray-300 hover:border-teal-500 overflow-hidden rounded-lg flex flex-col sm:flex-row transition-all shadow-lg">
       <Link to={`/post/${post.slug}`} className="flex-shrink-0 dark:text-white">
         <img
+          loading="lazy"
           src={post.image}
           alt="post image"
           className="w-full sm:w-64 h-48 sm:h-auto object-cover transition-transform duration-300 group-hover:scale-105"
