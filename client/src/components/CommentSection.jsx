@@ -53,7 +53,7 @@ function CommentSection({ postId }) {
     getComments();
   }, [postId]);
 
-  const handleLike = async (commentId) => {
+ const handleLike = async (commentId) => {
     try {
       if (!currentUser) {
         navigate('/sign-in');
@@ -70,7 +70,7 @@ function CommentSection({ postId }) {
               ? {
                   ...comment,
                   likes: data.likes,
-                  numberOfLikes: data.likes.length,
+                  numberOfLikes: data.numberOfLikes, 
                 }
               : comment
           )
