@@ -44,7 +44,7 @@ const FloatingAI = () => {
     setMessages(prev => [...prev, botMessage]);
 
     try {
-      const response = await fetch('/ai', {
+      const response = await fetch( `${import.meta.env.VITE_API_URL}/ai`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: userMessage.value }),
