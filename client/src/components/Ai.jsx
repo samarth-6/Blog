@@ -44,7 +44,7 @@ const FloatingAI = () => {
     setMessages(prev => [...prev, botMessage]);
 
     try {
-      const response = await fetch('http://localhost:3000/ai', {
+      const response = await fetch('/ai', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: userMessage.value }),

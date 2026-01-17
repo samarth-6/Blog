@@ -28,34 +28,40 @@ app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 
 app.post('/ai', async (req, res) => {
-    try {
-        const prompt = req.body.prompt;
-        
-        const response = await axios.post('https://api.cohere.ai/v1/generate', {
-            model: 'command',
-            prompt: prompt,
-            max_tokens: 1150,
-            temperature: 0.7,
-            k: 0,
-            stop_sequences: [],
-            return_likelihoods: 'NONE'
-        }, {
-            headers: {
-                'Authorization': `Bearer ${process.env.COHERE_API_KEY}`,
-                'Content-Type': 'application/json'
-            }
-        });
-
-        const generatedText = response.data.generations[0].text.trim();
-
-        res.status(200).json({
-            bot: generatedText
-        });
-    } catch (error) {
-        console.error(error);
-        res.status(500).send(error.message || 'Something went wrong');
+  try {
+    const prompt = req.body.prompt?.trim();
+    if (!prompt) {
+      return res.status(400).json({ error: 'Prompt cannot be empty' });
     }
+    const model = process.env.COHERE_MODEL || 'command-r-plus-08-2024';
+
+    const response = await axios.post(
+      'https://api.cohere.ai/v1/chat',
+      {
+        model,
+        message: prompt, 
+        temperature: 0.7,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${process.env.COHERE_API_KEY}`,
+          'Content-Type': 'application/json',
+        },
+      }
+    );
+    const botText = response?.data?.text;
+    
+    if (!botText) {
+      return res.status(502).json({ error: 'AI returned an unexpected response' });
+    }
+
+    res.json({ bot: botText.trim() });
+  } catch (error) {
+    console.error('AI ERROR:', error.response?.data || error.message);
+    res.status(500).json({ error: 'AI generation failed' });
+  }
 });
+
 
 // Serve static files from the 'dist' folder
 const __dirname = path.resolve();
