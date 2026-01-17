@@ -28,6 +28,10 @@ app.use('/api/post', postRoutes);
 app.use('/api/comment', commentRoutes);
 
 app.post('/ai', async (req, res) => {
+  console.log(
+    'COHERE KEY:',
+    process.env.COHERE_API_KEY ? 'SET' : 'MISSING'
+  );
   try {
     const prompt = req.body.prompt?.trim();
     if (!prompt) {
