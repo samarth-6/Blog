@@ -8,6 +8,8 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css'
 import  {useNavigate,useParams} from 'react-router-dom'
 import {useSelector} from 'react-redux'
+import { supabase } from '../supa_base';
+
 const UpdatePost = () => {
   const [file,setFile]=useState(null);
   const [imageUploadProgress,setimageUploadProgress]=useState(null);
@@ -66,47 +68,88 @@ const UpdatePost = () => {
       setPublishError('Something went wrong');
     }
   };
-  const handleUploadImage=async()=>{
+  // const handleUploadImage=async()=>{
+  //   try {
+  //     if(!file){
+  //       setImageUploadError('Please Select an Image');
+  //       return 
+  //     }
+  //     setImageUploadError(null);
+  //     const storage=getStorage(app)
+  //     const fileName = new Date().getTime()+'-'+file.name;
+  //     const storageRef=ref(storage,fileName);
+  //     const uploadTask=uploadBytesResumable(storageRef,file);
+  //     uploadTask.on(
+  //       'state_changed',
+  //       (snapshot)=>{
+  //         const progress=(snapshot.bytesTransferred/snapshot.totalBytes)*100;
+  //         setimageUploadProgress(progress.toFixed(0));
+  //       },
+  //       (error)=>{
+  //         setImageUploadError('Image Upload Failed');
+  //         setimageUploadProgress(null);
+  //       },
+  //       ()=>{
+  //         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=>{
+  //           setimageUploadProgress(null);
+  //           setImageUploadError(null);
+  //           setFormData({...formData,image:downloadURL})
+  //         })
+  //       }
+  //     )
+
+
+
+  //     //look at firebase.js for app thing we have exported app from there
+  //   } catch (error) {
+  //     setImageUploadError('image upload failed');
+  //     setimageUploadProgress(null);
+  //     console.log(error);
+      
+  //   }
+
+  // }
+  const handleUploadImage = async () => {
     try {
-      if(!file){
+      if (!file) {
         setImageUploadError('Please Select an Image');
-        return 
+        return;
       }
       setImageUploadError(null);
-      const storage=getStorage(app)
-      const fileName = new Date().getTime()+'-'+file.name;
-      const storageRef=ref(storage,fileName);
-      const uploadTask=uploadBytesResumable(storageRef,file);
-      uploadTask.on(
-        'state_changed',
-        (snapshot)=>{
-          const progress=(snapshot.bytesTransferred/snapshot.totalBytes)*100;
-          setimageUploadProgress(progress.toFixed(0));
-        },
-        (error)=>{
-          setImageUploadError('Image Upload Failed');
-          setimageUploadProgress(null);
-        },
-        ()=>{
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL)=>{
-            setimageUploadProgress(null);
-            setImageUploadError(null);
-            setFormData({...formData,image:downloadURL})
-          })
-        }
-      )
+      setimageUploadProgress(30); // Initialize progress
 
+      const fileName = new Date().getTime() + '-' + file.name;
+      const filePath = `public/${fileName}`;
 
+      // Upload to Supabase Storage
+      const { error: uploadError } = await supabase.storage
+        .from('mern-blog')
+        .upload(filePath, file);
 
-      //look at firebase.js for app thing we have exported app from there
+      if (uploadError) throw uploadError;
+
+      setimageUploadProgress(70); // Update progress
+
+      // Get the public URL
+      const { data } = supabase.storage
+        .from('mern-blog')
+        .getPublicUrl(filePath);
+
+      setimageUploadProgress(100); // Complete progress
+      setImageUploadError(null);
+      setFormData({ ...formData, image: data.publicUrl });
+
+      // Clear the progress bar after 1 second
+      setTimeout(() => {
+        setimageUploadProgress(null);
+      }, 1000);
+
     } catch (error) {
-      setImageUploadError('image upload failed');
+      setImageUploadError('Image upload failed');
       setimageUploadProgress(null);
       console.log(error);
-      
     }
-
-  }
+  };
   return (
     <div className='p-3 max-w-3xl mx-auto min-h-screen'>
       <h1 className='text-center text-3xl my-7 font-semibold'>

@@ -1,13 +1,14 @@
 import { Alert, Button, FileInput, Select, TextInput } from 'flowbite-react';
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from 'firebase/storage';
-import { app } from '../firebase';
+// import {
+//   getDownloadURL,
+//   getStorage,
+//   ref,
+//   uploadBytesResumable,
+// } from 'firebase/storage';
+import { supabase } from '../supa_base';
+// import { app } from '../firebase';
 import { useState } from 'react';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
@@ -22,6 +23,43 @@ export default function CreatePost() {
 
   const navigate = useNavigate();
 
+  // const handleUpdloadImage = async () => {
+  //   try {
+  //     if (!file) {
+  //       setImageUploadError('Please select an image');
+  //       return;
+  //     }
+  //     setImageUploadError(null);
+  //     const storage = getStorage(app);
+  //     const fileName = new Date().getTime() + '-' + file.name;
+  //     const storageRef = ref(storage, fileName);
+  //     const uploadTask = uploadBytesResumable(storageRef, file);
+  //     uploadTask.on(
+  //       'state_changed',
+  //       (snapshot) => {
+  //         const progress =
+  //           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  //         setImageUploadProgress(progress.toFixed(0));
+  //       },
+  //       (error) => {
+  //         setImageUploadError('Image upload failed');
+  //         setImageUploadProgress(null);
+  //       },
+  //       () => {
+  //         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+  //           setImageUploadProgress(null);
+  //           setImageUploadError(null);
+  //           setFormData({ ...formData, image: downloadURL });
+  //         });
+  //       }
+  //     );
+  //   } catch (error) {
+  //     setImageUploadError('Image upload failed');
+  //     setImageUploadProgress(null);
+  //     console.log(error);
+  //   }
+  // };
+
   const handleUpdloadImage = async () => {
     try {
       if (!file) {
@@ -29,29 +67,30 @@ export default function CreatePost() {
         return;
       }
       setImageUploadError(null);
-      const storage = getStorage(app);
+      setImageUploadProgress(30);
+
       const fileName = new Date().getTime() + '-' + file.name;
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, file);
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-          setImageUploadProgress(progress.toFixed(0));
-        },
-        (error) => {
-          setImageUploadError('Image upload failed');
-          setImageUploadProgress(null);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setImageUploadProgress(null);
-            setImageUploadError(null);
-            setFormData({ ...formData, image: downloadURL });
-          });
-        }
-      );
+      const filePath = `public/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('mern-blog')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      setImageUploadProgress(70); 
+      const { data } = supabase.storage
+        .from('mern-blog')
+        .getPublicUrl(filePath);
+
+      setImageUploadProgress(100); 
+      setImageUploadError(null);
+      setFormData({ ...formData, image: data.publicUrl });
+      
+      setTimeout(() => {
+        setImageUploadProgress(null);
+      }, 1000);
+
     } catch (error) {
       setImageUploadError('Image upload failed');
       setImageUploadProgress(null);
